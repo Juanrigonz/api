@@ -1,0 +1,48 @@
+schemaVersion: 2.1.0
+metadata:
+  name: python-hello-world
+  namespace: devspaces-dev
+attributes:
+  controller.devfile.io/devworkspace-config:
+    name: devworkspace-config
+    namespace: xid25394-devspaces-dev
+  controller.devfile.io/scc: container-build
+  controller.devfile.io/storage-type: per-user
+projects:
+  - git:
+      checkoutFrom:
+        revision: devspaces-3.4-rhel-8
+      remotes:
+        origin: 'https://github.com/devspaces-samples/python-hello-world.git'
+    name: python-hello-world
+components:
+  - container:
+      env:
+        - name: CHE_DASHBOARD_URL
+          value: 'https://devspaces.apps.chi01.chi.dev.cl1.paas.cloudcenter.corp'
+        - name: CHE_PLUGIN_REGISTRY_URL
+          value: 'https://devspaces.apps.chi01.chi.dev.cl1.paas.cloudcenter.corp/plugin-registry/v3'
+        - name: CHE_PLUGIN_REGISTRY_INTERNAL_URL
+          value: 'http://plugin-registry.xid25394-devspaces-dev.svc:8080/v3'
+        - name: OPENVSX_REGISTRY_URL
+          value: 'https://open-vsx.org'
+      image: 'registry.redhat.io/devspaces/udi-rhel8:3.4'
+      memoryLimit: 2G
+      mountSources: true
+      sourceMapping: /projects
+      volumeMounts:
+        - name: venv
+          path: /home/user/.venv
+    name: python
+  - name: venv
+    volume:
+      size: 1G
+commands:
+  - exec:
+      commandLine: python -m venv .venv && . .venv/bin/activate && python hello-world.py
+      component: python
+      group:
+        kind: run
+      label: Run the application
+      workingDir: '${PROJECTS_ROOT}/python-hello-world'
+    id: run
