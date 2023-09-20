@@ -1,5 +1,4 @@
-apiVersion: "workspace.devfile.io/v1alpha2"
-kind: DevWorkspace
+schemaVersion: 2.1.0
 metadata:
   name: "with-nodejs-devfile-parent"
 spec:
